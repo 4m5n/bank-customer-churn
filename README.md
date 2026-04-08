@@ -1,18 +1,74 @@
-Overview
-Churn is considered to be one of the most expensive problems in banking, where losing a customer means losing years of potential revenue. This project builds a machine learning pipeline to predict whether a customer is likely to churn, and is deployed in an interactive Streamlit dashboard so anyone can use it without running the code.
-The Dataset
-I worked with a Banking Customer Churn Dataset found on Kaggle that contained features such as Credit Score, Geography, Gender, Age, Tenure, Balance, Number of Products, Has Credit Card, Is Active Member, Estimated Salary, and Exited (Churned). The goal was to predict a binary outcome – did the customer leave or stay?
-Data Exploration
-Before modeling, I visualized the distributions of key features to develop a better understanding of the data. This helped surface patterns like how Tenure influences Churn, if Age impacts churn, and if an individual's balance influences churn rate. I also selected a numerical feature I thought would influence churn rate drastically — the number of products — which turned out to have less influence than expected.
-Preprocessing
-Categorical features such as geography and gender were label encoded to make them model-ready. I also dropped RowNumber, CustomerId, and Surname, as they don't have an impact on deciding whether a customer will churn or not. I then split the data 80/20 into training and test sets. To address the class imbalance, I applied SMOTE – a technique that synthetically generates new samples of the minority class so the model doesn't just learn to always predict no churn.
-Modeling
-I trained an XGBoost classifier, which is well suited for structured tabular data like this. It handles non-linear relationships well and is robust out of the box without heavy tuning. I set n_estimators to 100, max_depth to 5, and learning rate to 0.1 — chosen as a baseline to avoid overfitting while keeping training efficient.
-Results
-The model achieved 81% overall accuracy on the test set. However, the confusion matrix tells a more nuanced story — the model is stronger at identifying customers who stay than those who leave.
-Of the customers who actually churned, the model caught 68% of them (recall), but when it predicted churn, it was only right about 53% of the time (precision). In practical terms, that means a meaningful number of churners are still being missed, and about half the churn alerts are false alarms.
-In a real banking context, missing a churner is the more costly mistake — you lose the customer entirely. A false alarm at worst means an unnecessary retention offer. That tradeoff suggests that improving recall on the churn class should be the priority in future iterations, whether through further tuning, a lower classification threshold, or a different evaluation metric like F1 score.
-Streamlit Dashboard
-I built an interactive dashboard where a user can input their own customer attributes — such as age, credit score, and account balance — and get an instant churn prediction. It makes the model usable by anyone, not just someone who can develop and read code.
-What's Next
-There are a few directions I'd explore to improve this project further. Tuning hyperparameters more rigorously with Optuna could squeeze out better performance, and adding SHAP values would make the model explainable — showing not just whether a customer will churn, but why. I'd also experiment with lowering the classification threshold to prioritize recall and catch more churners, even at the cost of some additional false alarms.
+# Bank Customer Churn Prediction
+
+## Overview
+Churn is one of the most expensive problems in banking, where losing a customer means losing years of potential revenue. This project builds a machine learning pipeline to predict whether a customer is likely to churn, and it is deployed in an interactive Streamlit dashboard so anyone can use it without running the code.
+
+## Dataset
+I worked with a banking customer churn dataset from Kaggle that contains features such as:
+- `CreditScore`
+- `Geography`
+- `Gender`
+- `Age`
+- `Tenure`
+- `Balance`
+- `NumOfProducts`
+- `HasCrCard`
+- `IsActiveMember`
+- `EstimatedSalary`
+- `Exited`
+
+The goal was to predict a binary outcome: did the customer leave (`Exited=1`) or stay (`Exited=0`)?
+
+**Source:**  
+[Bank Customer Churn Prediction Dataset on Kaggle](https://www.kaggle.com/datasets/saurabhbadole/bank-customer-churn-prediction-dataset?resource=download)
+
+## Data Exploration
+Before modeling, I visualized the distributions of key features to understand the data. This revealed patterns such as:
+- how `Tenure` influences churn
+- how `Age` impacts churn
+- whether account `Balance` influences churn rate
+
+I also examined `NumOfProducts`, which I expected to strongly influence churn, but it turned out to have less impact than expected.
+
+## Preprocessing
+- Dropped irrelevant columns: `RowNumber`, `CustomerId`, and `Surname`
+- Label encoded categorical features: `Geography` and `Gender`
+- Split the data into an 80/20 training/test split
+- Applied SMOTE to address class imbalance, generating synthetic samples for the minority churn class
+
+## Modeling
+I trained an XGBoost classifier, which is well suited for structured tabular data. The chosen parameters were:
+- `n_estimators=100`
+- `max_depth=5`
+- `learning_rate=0.1`
+
+This setup provides a strong baseline while avoiding heavy overfitting and keeping training efficient.
+
+## Results
+The model achieved approximately **81% overall accuracy** on the test set.
+
+However, the confusion matrix showed a more nuanced picture:
+- the model is stronger at identifying customers who stay than those who leave
+- among actual churners, recall was around **68%**
+- when the model predicted churn, precision was about **53%**
+
+In a banking context:
+- missing a churner is more costly because you lose the customer
+- a false alarm usually means an unnecessary retention offer
+
+So, improving recall for the churn class should be the priority in future iterations.
+
+## Streamlit Dashboard
+I built an interactive dashboard where users can input customer attributes such as:
+- age
+- credit score
+- account balance
+
+The app returns an instant churn prediction, making the model accessible to non-technical users.
+
+## What’s Next
+Future improvements could include:
+- more rigorous hyperparameter tuning with tools like Optuna
+- adding SHAP values for model explainability
+- adjusting the classification threshold to prioritize recall
+- exploring alternative evaluation metrics like F1 score
