@@ -161,16 +161,18 @@ if model is not None:
         - Features: 10 customer attributes
         """)
         
-        st.header("🔝 Top Predictors")
+        st.header("🔝 Top Feature Importances")
         top_features = [
-            "Age",
-            "Tenure",
-            "NumOfProducts",
-            "EstimatedSalary",
-            "Geography",
             "IsActiveMember",
+            "Age",
+            "Gender",
+            "NumOfProducts",
             "HasCrCard",
-            "Balance"
+            "Geography",
+            "Balance",
+            "Tenure",
+            "EstimatedSalary",
+            "CreditScore"
         ]
         for i, feature in enumerate(top_features, 1):
             st.markdown(f"**{i}. {feature}**")
