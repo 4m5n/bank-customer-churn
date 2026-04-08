@@ -156,7 +156,7 @@ if model is not None:
         st.info("""
         **XGBoost Classifier**
         - Training Set: 8,000 customers
-        - Test Accuracy: ~80%
+        - Test Accuracy: ~81%
         - Balancing: SMOTE applied
         - Features: 10 customer attributes
         """)
